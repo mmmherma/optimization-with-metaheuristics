@@ -1,4 +1,4 @@
-package com.github.optimizationwithmetaheuristics.combinatorialproblem
+package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa
 
 /**
  * Quadratic Assignment Problem (SA-QAP)
