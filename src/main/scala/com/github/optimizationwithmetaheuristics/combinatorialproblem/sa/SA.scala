@@ -9,7 +9,7 @@ package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa
  * In this case the optimal answer is 214.
  */
 
-object SA {
+object SA extends App {
 
   // STEP 1. Init problem
   // Create distance matrix between departments
