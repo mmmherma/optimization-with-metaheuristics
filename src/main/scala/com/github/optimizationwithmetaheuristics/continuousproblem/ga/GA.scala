@@ -27,7 +27,7 @@ object GA extends App {
   protected val N: Int = 20
   protected val l: Int = 24
   protected val pc: Double = 0.9
-  protected val pm: Double = 1
+  protected val pm: Double = 0.1
   protected val k: Int = 3
 
   addShutdownHook {

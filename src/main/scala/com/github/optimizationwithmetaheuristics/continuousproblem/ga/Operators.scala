@@ -40,6 +40,7 @@ class Operators {
       var mutedChild: StringBuilder = new StringBuilder
       for(j <- 0 to child(i).size-1) {
         if(pm > scala.util.Random.nextDouble()) {
+          println("Mutting gene")
           if(child(i).charAt(j) == '0') {
             mutedChild.append('1')
           } else {
