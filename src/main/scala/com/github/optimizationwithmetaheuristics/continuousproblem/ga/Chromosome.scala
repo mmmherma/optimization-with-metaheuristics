@@ -1,37 +1,38 @@
 package com.github.optimizationwithmetaheuristics.continuousproblem.ga
 
-trait Operations {
+import com.github.optimizationwithmetaheuristics.config.{Configuration, Settings}
+
+import scala.math.pow
+import org.slf4j.LoggerFactory
+import com.typesafe.config.ConfigFactory
+
+trait ChromosomeOperations {
 
   def getAllele(position: Int): Int
-  def getFenotype(): Float
-  def getPrecision(): Float
-  def getXFenotype(): Float
-  def getYFenotype(): Float
-  def getGenotype(): String
+  def getPrecision: Float
+  def getXFenotype: Float
+  def getYFenotype: Float
+  def getGenotype: String
+  def z(x: Double, y: Double): Double
+  def getObjectiveValue: Double
 
 }
 
-class Chromosome(value: String, upperBound: Int, lowerBound: Int) extends Operations {
+class Chromosome(value: String) extends ChromosomeOperations {
+
+  implicit val config: Configuration = new Settings(ConfigFactory.load())
+  implicit val logger = LoggerFactory.getLogger(getClass.getName)
 
   override def getAllele(position: Int): Int =
     value.charAt(position).asDigit
 
-  override def getGenotype(): String =
+  override def getGenotype: String =
     value
 
-  override def getFenotype(): Float = {
-    var fenotype = 0
-    for (i <- 0 to value.size-1) {
-      fenotype += value.charAt(i).asDigit * scala.math.pow(2, value.size - i - 1).toInt
-    }
+  override def getPrecision: Float =
+    (config.upperBound - config.lowerBound) / (scala.math.pow(2, value.size/2) - 1).toFloat
 
-    fenotype * getPrecision() + lowerBound
-  }
-
-  override def getPrecision(): Float =
-    (upperBound - lowerBound) / (scala.math.pow(2, value.size/2) - 1).toFloat
-
-  override def getXFenotype(): Float = {
+  override def getXFenotype: Float = {
     val x = value.substring(value.length/2, value.length)
 
     var xFenotype = 0
@@ -39,10 +40,10 @@ class Chromosome(value: String, upperBound: Int, lowerBound: Int) extends Operat
       xFenotype += x.charAt(i).asDigit * scala.math.pow(2, x.size - i - 1).toInt
     }
 
-    xFenotype * getPrecision() + lowerBound
+    xFenotype * getPrecision + config.lowerBound
   }
 
-  override def getYFenotype(): Float = {
+  override def getYFenotype: Float = {
     val y = value.substring(0, value.length/2)
 
     var yFenotype = 0
@@ -50,7 +51,14 @@ class Chromosome(value: String, upperBound: Int, lowerBound: Int) extends Operat
       yFenotype += y.charAt(i).asDigit * scala.math.pow(2, y.size - i - 1).toInt
     }
 
-    yFenotype * getPrecision() + lowerBound
+    yFenotype * getPrecision + config.lowerBound
   }
+
+  // Function to optimize (minimize)
+  def z(x: Double, y: Double): Double =
+    pow(pow(x, 2) + y - 11, 2) + pow(x + pow(y, 2) - 7, 2)
+
+  def getObjectiveValue: Double =
+    z(getXFenotype, getYFenotype)
 
 }

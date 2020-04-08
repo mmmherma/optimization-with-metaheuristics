@@ -1,60 +1,60 @@
 package com.github.optimizationwithmetaheuristics.continuousproblem.ga
 
+import com.github.optimizationwithmetaheuristics.continuousproblem.ga.Chromosome
+
 import scala.collection.mutable.ArrayBuffer
+import org.slf4j.LoggerFactory
 
 class Operators {
 
-  def crossover(parent1: String, parent2: String, crossoverProbability: Double): Array[String] = {
+  implicit val logger = LoggerFactory.getLogger(getClass.getName)
+
+  def crossover(parent1: Chromosome, parent2: Chromosome, crossoverProbability: Double): Array[Chromosome] = {
     // TWO POINT CROSSOVER
 
-    var crossoverIndividuals = Array[String]()
+    var crossoverIndividuals = ArrayBuffer[Chromosome]()
     if(crossoverProbability > scala.util.Random.nextDouble()) {
       // 2 different random numbers
       var crossoverPosition = scala.util.Random.shuffle(
-        Seq.fill(20)(scala.util.Random.nextInt(24)).distinct
+        Seq.fill(20)(scala.util.Random.nextInt(parent1.getGenotype.size)).distinct
       ).take(2).sorted
 
       // Create crossover swapping parents
-      crossoverIndividuals :+=
-        parent1.substring(0, crossoverPosition(0)) +
-        parent2.substring(crossoverPosition(0), crossoverPosition(1)) +
-        parent1.substring(crossoverPosition(1), parent1.size-1)
-      crossoverIndividuals :+=
-        parent2.substring(0, crossoverPosition(0)) +
-        parent1.substring(crossoverPosition(0), crossoverPosition(1)) +
-        parent2.substring(crossoverPosition(1), parent1.size-1)
+      crossoverIndividuals :+= new Chromosome(
+        parent1.getGenotype.substring(0, crossoverPosition(0)) +
+        parent2.getGenotype.substring(crossoverPosition(0), crossoverPosition(1)) +
+        parent1.getGenotype.substring(crossoverPosition(1), parent1.getGenotype.size)
+      )
+      crossoverIndividuals :+= new Chromosome(
+        parent2.getGenotype.substring(0, crossoverPosition(0)) +
+        parent1.getGenotype.substring(crossoverPosition(0), crossoverPosition(1)) +
+        parent2.getGenotype.substring(crossoverPosition(1), parent2.getGenotype.size)
+      )
     } else {
       crossoverIndividuals :+= parent1
       crossoverIndividuals :+= parent2
     }
 
-    crossoverIndividuals
+    crossoverIndividuals.toArray
   }
 
-  def mutation(child: Array[String], pm: Double): Array[String] = {
+  def mutation(child: Chromosome, pm: Double): Chromosome = {
     // BIT-FLIPPING
 
-    var mutants: ArrayBuffer[String] = new ArrayBuffer[String]()
-
-    for(i <- 0 to 1) {
-      var mutedChild: StringBuilder = new StringBuilder
-      for(j <- 0 to child(i).size-1) {
-        if(pm > scala.util.Random.nextDouble()) {
-          println("Mutting gene")
-          if(child(i).charAt(j) == '0') {
-            mutedChild.append('1')
-          } else {
-            mutedChild.append('0')
-          }
+    var mutedChild: StringBuilder = new StringBuilder
+    for(i <- 0 to child.getGenotype.size-1) {
+      if(pm > scala.util.Random.nextDouble()) {
+        if(child.getGenotype.charAt(i) == '0') {
+          mutedChild.append('1')
         } else {
-          mutedChild += child(i).charAt(j)
+          mutedChild.append('0')
         }
+      } else {
+        mutedChild.append(child.getGenotype.charAt(i))
       }
-
-      mutants += mutedChild.toString()
     }
 
-    mutants.toArray
+    new Chromosome(mutedChild.toString)
   }
 
 }

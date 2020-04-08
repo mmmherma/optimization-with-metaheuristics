@@ -4,27 +4,63 @@ import com.github.optimizationwithmetaheuristics.config.{Configuration, Settings
 
 import scala.collection.mutable.ArrayBuffer
 import com.typesafe.config.ConfigFactory
-import scala.math.pow
+import org.slf4j.LoggerFactory
 
 class Population(size: Int, individualSize: Int) {
 
   implicit val config: Configuration = new Settings(ConfigFactory.load())
+  implicit val logger = LoggerFactory.getLogger(getClass.getName)
 
-  protected var population: ArrayBuffer[String] = new ArrayBuffer[String]()
+  protected var population: ArrayBuffer[Chromosome] = new ArrayBuffer[Chromosome]()
 
-  // Function to optimize (minimize)
-  def z(x: Double, y: Double): Double =
-    pow(pow(x, 2) + y - 11, 2) + pow(x + pow(y, 2) - 7, 2)
-
-  def generatePopulation(): Unit = {
-    population.clear()
-
-    for(i <- 0 to size) {
-      population += generateIndividual()
+  def printIndividualsSize: Unit ={
+    for(individual <- population) {
+      println(individual.getGenotype.size)
     }
   }
 
-  def generateIndividual(): String = {
+  def getPopulation: ArrayBuffer[Chromosome] =
+    population
+
+  def setPopulation(newPopulation: ArrayBuffer[Chromosome]): Unit = {
+    population.clear()
+    newPopulation.foreach(
+      population += _
+    )
+  }
+
+  def getSize: Int =
+    population.size
+
+  def printPopulation: Unit =
+    for (individual <- population) {
+      println(individual.getGenotype)
+    }
+
+  def getIndividual(position: Int): Chromosome =
+    population(position)
+
+  def getBestIndividual: Chromosome = {
+    var objectiveValues = new ArrayBuffer[Double]()
+    for (i <- 0 to population.size-1) {
+      objectiveValues += getIndividual(i).getObjectiveValue
+    }
+
+    getIndividual(objectiveValues.indexOf(objectiveValues.min))
+  }
+
+  def setIndividual(individual: Chromosome): Unit =
+    population.append(individual)
+
+  def generatePopulation: Unit = {
+    population.clear
+
+    for(i <- 0 to size-1) {
+      population += generateIndividual
+    }
+  }
+
+  def generateIndividual: Chromosome = {
     var individual = ""
     for(i <- 0 to individualSize-1) {
       if(scala.util.Random.nextDouble() > 0.5) {
@@ -34,15 +70,25 @@ class Population(size: Int, individualSize: Int) {
       }
     }
 
-    individual
+    new Chromosome(individual)
   }
 
+  // POPULATION PARENT SELECTION
+  /**
+   * Randomly choose individuals for tournament
+   * @param number  Number of individuals
+   * @return        Sequence with de number of the individuals
+   */
   def chooseTournamentContestants(number: Int): Seq[Int] =
     scala.util.Random.shuffle(
       Seq.fill(20)(scala.util.Random.nextInt(20)).distinct
     ).take(number)
 
-  def findParents(): (String, Double) = {
+  /**
+   * Choose parents with best objective value
+   * @return  Parents
+   */
+  def findParents: Seq[Chromosome] = {
     // Tournament Selection
 
     // Choose 3 random individuals from population (generating 3 unique random numbers between 0 and population.size)
@@ -52,24 +98,15 @@ class Population(size: Int, individualSize: Int) {
     }
 
     // Evaluate parents objective function
-    var parentAndFitness: Seq[(String, Double)] = Seq.tabulate(3)(n => {
-      val parent: Chromosome = new Chromosome(getIndividual(contestants(n)), 6, -6)
-      (getIndividual(contestants(n)), z(parent.getXFenotype(), parent.getYFenotype()))
+    var parentAndFitness: Seq[(Chromosome, Double)] = Seq.tabulate(3)(n => {
+      (getIndividual(contestants(n)), getIndividual(contestants(n)).getObjectiveValue)
     })
 
     // Get 2 best parents
-    parentAndFitness = parentAndFitness.sortBy(_._2).take(1)
+    parentAndFitness = parentAndFitness.sortBy(_._2).take(2)
 
     // Return best fitness parent tuple
-    parentAndFitness match {
-      case (Seq((chromosome, fitness))) => (chromosome, fitness)
-    }
+    parentAndFitness.map(_._1)
   }
-
-  def printPopulation(): Unit =
-    population.foreach(println(_))
-
-  def getIndividual(position: Int): String =
-    population(position)
 
 }
