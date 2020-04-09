@@ -3,11 +3,15 @@ package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa.QAP
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
 
+import scala.collection.mutable.ArrayBuffer
+
 /**
  * Quadratic Assignment Problem (SA-QAP)
  *
  * Minimize flow costs between the placed departments (8 in the top row and 8 in the bottom row).
  *    flow cost = flow * distance
+ *
+ * Optimal solution is 214
  *
  * In this case the optimal answer is 214.
  */
@@ -73,7 +77,7 @@ object QAP extends App {
   // Store potential solutions objective value
   protected var potentialSolutionObjectiveValue: Int = 0
 
-  def execute: Unit = {
+  def execute: Int = {
     for (i <- 0 to config.getInt("M")-1) {
       for (j <- 0 to config.getInt("N")-1) {
         // Initialize potential solution with current solution
@@ -117,9 +121,13 @@ object QAP extends App {
       T = T * config.getDouble("alpha")
     }
 
-    logger.info("Final objective value: " + potentialSolutionObjectiveValue.toString)
+    potentialSolutionObjectiveValue
   }
 
-  execute
+  protected var solutionArray = new ArrayBuffer[Int](100)
+  for(i <- 0 to 100) {
+    solutionArray += execute
+  }
+  logger.info("Minumim objective value: " + solutionArray.min)
 
 }
