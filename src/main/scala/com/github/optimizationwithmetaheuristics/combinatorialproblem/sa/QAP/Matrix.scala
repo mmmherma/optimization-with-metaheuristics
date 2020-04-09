@@ -1,4 +1,4 @@
-package com.github.optimizationwithmetaheuristics.continuousproblem.sa.HummelblauFunction
+package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa.QAP
 
 import org.slf4j.LoggerFactory
 
@@ -15,6 +15,9 @@ class Matrix(dimension: Int) {
       matrix(index)(i) = row(i)
     }
   }
+
+  def getRow(index: Int): Array[Int] =
+    matrix(index)
 
   def getElement(row: Int, col: Int): Int =
     matrix(row)(col)

@@ -1,6 +1,5 @@
 package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa.QAP
 
-import com.github.optimizationwithmetaheuristics.continuousproblem.sa.HummelblauFunction.Matrix
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
 
@@ -18,7 +17,14 @@ object QAP extends App {
   implicit val logger = LoggerFactory.getLogger(getClass.getName)
   implicit val config = ConfigFactory.load().getConfig("problems.combinatorial.sa.qap")
 
-  implicit val distance = Array.ofDim[Int](8)
+  protected def objectiveValue(matrix: Matrix): Int = {
+    var sum: Int = 0
+    for (i <- 0 to 7) {
+      sum += matrix.getRow(i).sum
+    }
+
+    sum
+  }
 
   // STEP 1. Init problem
   // Create distance matrix between departments
@@ -58,6 +64,6 @@ object QAP extends App {
 
   protected val test = reindexedDistanceMatrix
   test.multiplication(flowMatrix)
-  test.printMatrix
+  println(objectiveValue(test))
 
 }
