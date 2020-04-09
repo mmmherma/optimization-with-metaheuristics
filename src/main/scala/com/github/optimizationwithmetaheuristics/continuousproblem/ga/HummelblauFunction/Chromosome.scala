@@ -1,10 +1,10 @@
-package com.github.optimizationwithmetaheuristics.continuousproblem.ga
+package com.github.optimizationwithmetaheuristics.continuousproblem.ga.HummelblauFunction
 
 import com.github.optimizationwithmetaheuristics.config.{Configuration, Settings}
+import com.typesafe.config.ConfigFactory
+import org.slf4j.LoggerFactory
 
 import scala.math.pow
-import org.slf4j.LoggerFactory
-import com.typesafe.config.ConfigFactory
 
 trait ChromosomeOperations {
 

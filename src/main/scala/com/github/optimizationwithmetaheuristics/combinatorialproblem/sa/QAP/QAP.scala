@@ -1,4 +1,7 @@
-package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa
+package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa.QAP
+
+import com.typesafe.config.ConfigFactory
+import org.slf4j.LoggerFactory
 
 /**
  * Quadratic Assignment Problem (SA-QAP)
@@ -9,7 +12,12 @@ package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa
  * In this case the optimal answer is 214.
  */
 
-object SA extends App {
+object QAP extends App {
+
+  implicit val logger = LoggerFactory.getLogger(getClass.getName)
+  implicit val config = ConfigFactory.load().getConfig("problems.combinatorial.sa.qap")
+
+  implicit val distance = Array.ofDim[Int](8)
 
   // STEP 1. Init problem
   // Create distance matrix between departments
@@ -34,12 +42,6 @@ object SA extends App {
     Array(0,2,0,2,0,5,0,10),
     Array(6,0,5,10,0,1,10,0)
   )
-
-  // SA parameters
-  protected var T0 = 1500
-  protected val M = 250
-  protected val N = 20
-  protected val alpha = 0.9
 
   // Initial solution
   protected var x0 = Array(1, 3, 0, 4, 2, 5, 6, 7)

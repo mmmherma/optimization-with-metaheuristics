@@ -1,33 +1,13 @@
-package com.github.optimizationwithmetaheuristics.continuousproblem.ga
-
-/**
- * Minimize the Himmelblau Function
- *    (x^2 + y - 11)^2 + (x + y^2 - 7)^2
- *
- * Local (in this case also global) minimums:
- *    z(3.0, 2.0) = 0.0
- *    z(-2.805118, 3.131312) = 0.0
- *    z(-3.779310, -3.283186) = 0.0
- *    z(3.584428, -1.848126) = 0.0
- *
- * Chromosome longitude will be 8 bits: first half to 'y' and second half to 'x'
- *
- *    M  - Number of generations
- *    N  - Population size
- *    l  - Chromosome length
- *    pc - Crossover probability
- *    pm - Mutation probability
- *    k  - Number of contestants when tournament selection is perform
- */
+package com.github.optimizationwithmetaheuristics.continuousproblem.ga.HummelblauFunction
 
 import com.github.optimizationwithmetaheuristics.config.{Configuration, Settings}
+import com.typesafe.config.ConfigFactory
+import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ArrayBuffer
 import scala.sys.addShutdownHook
-import com.typesafe.config.ConfigFactory
-import org.slf4j.{LoggerFactory}
 
-object GA extends App {
+object HummelblauFunction extends App {
 
   implicit val config: Configuration = new Settings(ConfigFactory.load())
   implicit val logger = LoggerFactory.getLogger(getClass.getName)

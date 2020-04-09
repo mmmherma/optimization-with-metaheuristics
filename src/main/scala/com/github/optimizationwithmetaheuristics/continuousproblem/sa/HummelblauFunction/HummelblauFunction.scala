@@ -1,9 +1,10 @@
-package com.github.optimizationwithmetaheuristics.continuousproblem.sa
+package com.github.optimizationwithmetaheuristics.continuousproblem.sa.HummelblauFunction
+
+import com.typesafe.config.ConfigFactory
+import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ListBuffer
 import scala.math.pow
-import org.slf4j.LoggerFactory
-import com.typesafe.config.ConfigFactory
 
 /**
  * Simulated Annealing

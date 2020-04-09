@@ -1,10 +1,10 @@
-package com.github.optimizationwithmetaheuristics.continuousproblem.ga
+package com.github.optimizationwithmetaheuristics.continuousproblem.ga.HummelblauFunction
 
 import com.github.optimizationwithmetaheuristics.config.{Configuration, Settings}
-
-import scala.collection.mutable.ArrayBuffer
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
+
+import scala.collection.mutable.ArrayBuffer
 
 class Population(size: Int, individualSize: Int) {
 

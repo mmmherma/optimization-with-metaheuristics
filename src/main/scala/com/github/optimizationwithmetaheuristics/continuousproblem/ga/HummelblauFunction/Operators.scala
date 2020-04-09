@@ -1,9 +1,8 @@
-package com.github.optimizationwithmetaheuristics.continuousproblem.ga
+package com.github.optimizationwithmetaheuristics.continuousproblem.ga.HummelblauFunction
 
-import com.github.optimizationwithmetaheuristics.continuousproblem.ga.Chromosome
+import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ArrayBuffer
-import org.slf4j.LoggerFactory
 
 class Operators {
 
