@@ -1,5 +1,7 @@
 package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa.QAP
 
+import java.awt.geom.Dimension2D
+
 import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ArrayBuffer
@@ -9,6 +11,12 @@ class Matrix(dimension: Int) {
   implicit val logger = LoggerFactory.getLogger(getClass.getName)
 
   protected var matrix = Array.ofDim[Int](dimension, dimension)
+
+  def getMatrix: Array[Array[Int]] =
+    matrix
+
+  def setMatrix(content: Array[Array[Int]]): Unit =
+    matrix = content
 
   def setRow(row: Array[Int], index: Int): Unit = {
     for (i <- 0 to dimension-1) {

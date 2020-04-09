@@ -26,19 +26,28 @@ object QAP extends App {
     sum
   }
 
+  def neighbourProbability(potential: Double, current: Double) =
+    1 / scala.math.exp(( potential - current ) / T)
+
+  protected var T = config.getDouble("T0")
+
+  def getDistanceMatrix: Matrix = {
+    // Create distance matrix between departments
+    var distanceMatrix = new Matrix(8)
+    distanceMatrix.setRow(Array(0, 1, 2, 3, 1, 2, 3, 4), 0)
+    distanceMatrix.setRow(Array(1, 0, 1, 2, 2, 1, 2, 3), 1)
+    distanceMatrix.setRow(Array(2, 1, 0, 1, 3, 2, 1, 2), 2)
+    distanceMatrix.setRow(Array(3, 2, 1, 0, 4, 3, 2, 1), 3)
+    distanceMatrix.setRow(Array(1, 2, 3, 4, 0, 1, 2, 3), 4)
+    distanceMatrix.setRow(Array(2, 1, 2, 3, 1, 0, 1, 2), 5)
+    distanceMatrix.setRow(Array(3, 2, 1, 2, 2, 1, 0, 1), 6)
+    distanceMatrix.setRow(Array(4, 3, 2, 1, 3, 2, 1, 0), 7)
+
+    distanceMatrix
+  }
+
   // STEP 1. Init problem
-  // Create distance matrix between departments
-  protected var distanceMatrix = new Matrix(8)
-  distanceMatrix.setRow(Array(0, 1, 2, 3, 1, 2, 3, 4), 0)
-  distanceMatrix.setRow(Array(1, 0, 1, 2, 2, 1, 2, 3), 1)
-  distanceMatrix.setRow(Array(2, 1, 0, 1, 3, 2, 1, 2), 2)
-  distanceMatrix.setRow(Array(3, 2, 1, 0, 4, 3, 2, 1), 3)
-  distanceMatrix.setRow(Array(1, 2, 3, 4, 0, 1, 2, 3), 4)
-  distanceMatrix.setRow(Array(2, 1, 2, 3, 1, 0, 1, 2), 5)
-  distanceMatrix.setRow(Array(3, 2, 1, 2, 2, 1, 0, 1), 6)
-  distanceMatrix.setRow(Array(4, 3, 2, 1, 3, 2, 1, 0), 7)
-//  println("Distance matrix")
-//  distanceMatrix.printMatrix
+
   // Create flow matrix between departments
   protected val flowMatrix = new Matrix(8)
   flowMatrix.setRow(Array(0,5,2,4,1,0,0,6), 0)
@@ -49,21 +58,68 @@ object QAP extends App {
   flowMatrix.setRow(Array(0,2,0,2,10,0,5,1), 5)
   flowMatrix.setRow(Array(0,2,0,2,0,5,0,10), 6)
   flowMatrix.setRow(Array(6,0,5,10,0,1,10,0), 7)
-//  println(flowMatrix.printMatrix)
 
-  // Initial solution
-  protected var x0 = Array(1, 3, 0, 4, 2, 5, 6, 7)
+  // STEP 2. Evaluate initial solution
+  protected var currentSolution = Array(1, 3, 0, 4, 2, 5, 6, 7)
+  // Create reindexed matrix
+  protected val currentReindexedDistanceMatrix = getDistanceMatrix
+  currentReindexedDistanceMatrix.reindex(currentSolution)
+  // Get cost matrix
+  currentReindexedDistanceMatrix.multiplication(flowMatrix)
+  // Get initial solution objective value
+  protected var currentObjectiveValue = objectiveValue(currentReindexedDistanceMatrix)
+  logger.info("Initial objective value (before SA): " + currentObjectiveValue.toString)
 
-  // Reindex distance matrix
-  protected val reindexedDistanceMatrix = distanceMatrix
-  reindexedDistanceMatrix.reindex(x0)
-  /*// Reindex cost matrix
-  protected val reindexedFlowMatrix = flowMatrix
-  reindexedFlowMatrix.reindex(x0)
-  reindexedFlowMatrix.printMatrix*/
+  // Store potential solutions objective value
+  protected var potentialSolutionObjectiveValue: Int = 0
 
-  protected val test = reindexedDistanceMatrix
-  test.multiplication(flowMatrix)
-  println(objectiveValue(test))
+  def execute: Unit = {
+    for (i <- 0 to config.getInt("M")-1) {
+      for (j <- 0 to config.getInt("N")-1) {
+        // Initialize potential solution with current solution
+        val potentialSolution = currentSolution
+
+        // Swap 2 departments choosing 2 random integers
+        val randomDepartment1 = scala.util.Random.nextInt(8)
+        var randomDepartment2 = scala.util.Random.nextInt(8)
+
+        while(randomDepartment1 == randomDepartment2) {
+          randomDepartment2 = scala.util.Random.nextInt(8)
+        }
+
+        val department1 = potentialSolution(randomDepartment1)
+        potentialSolution(randomDepartment1) = potentialSolution(randomDepartment2)
+        potentialSolution(randomDepartment2) = department1
+
+        // Get potential solution cost
+        val potentialDistanceMatrix: Matrix = getDistanceMatrix
+        // Reindex potential solution matrix
+        potentialDistanceMatrix.reindex(potentialSolution)
+        // Get potential solution cost matrix
+        potentialDistanceMatrix.multiplication(flowMatrix)
+        // Get potential solution objective cost
+        val potentialObjectiveValue = objectiveValue(potentialDistanceMatrix)
+
+        // Decide which solution
+        val solutionDecisionRandom = scala.util.Random.nextDouble()
+        if (potentialObjectiveValue <= currentObjectiveValue) {
+          currentSolution = potentialSolution
+          potentialSolutionObjectiveValue = potentialObjectiveValue
+        } else if (solutionDecisionRandom <= neighbourProbability(potentialObjectiveValue, currentObjectiveValue)) {
+          currentSolution = potentialSolution
+          potentialSolutionObjectiveValue = potentialObjectiveValue
+        } else {
+          currentSolution = currentSolution
+        }
+      }
+
+      // Update temperature
+      T = T * config.getDouble("alpha")
+    }
+
+    logger.info("Final objective value: " + potentialSolutionObjectiveValue.toString)
+  }
+
+  execute
 
 }
