@@ -1,4 +1,4 @@
-package com.github.optimizationwithmetaheuristics.config
+package com.github.optimizationwithmetaheuristics.utils.config
 
 trait Configuration {
 

@@ -1,13 +1,14 @@
-package com.github.optimizationwithmetaheuristics.continuousproblem.ga.HummelblauFunction
+package com.github.optimizationwithmetaheuristics.continuousproblem.ga
 
-import com.github.optimizationwithmetaheuristics.config.{Configuration, Settings}
+import com.github.optimizationwithmetaheuristics.utils.config.{Configuration, Settings}
+import com.github.optimizationwithmetaheuristics.utils.ga.{Chromosome, Operators, Population}
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ArrayBuffer
 import scala.sys.addShutdownHook
 
-object HummelblauFunction extends App {
+object Hummelblau extends App {
 
   implicit val config: Configuration = new Settings(ConfigFactory.load())
   implicit val logger = LoggerFactory.getLogger(getClass.getName)

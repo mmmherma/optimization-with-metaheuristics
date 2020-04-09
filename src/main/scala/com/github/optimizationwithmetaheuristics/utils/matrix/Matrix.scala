@@ -1,6 +1,4 @@
-package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa.QAP
-
-import java.awt.geom.Dimension2D
+package com.github.optimizationwithmetaheuristics.utils.matrix
 
 import org.slf4j.LoggerFactory
 

@@ -1,8 +1,9 @@
-package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa.QAP
+package com.github.optimizationwithmetaheuristics.combinatorialproblem.sa
+
+import com.github.optimizationwithmetaheuristics.utils.matrix.Matrix
 
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
-
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -10,8 +11,6 @@ import scala.collection.mutable.ArrayBuffer
  *
  * Minimize flow costs between the placed departments (8 in the top row and 8 in the bottom row).
  *    flow cost = flow * distance
- *
- * Optimal solution is 214
  *
  * In this case the optimal answer is 214.
  */

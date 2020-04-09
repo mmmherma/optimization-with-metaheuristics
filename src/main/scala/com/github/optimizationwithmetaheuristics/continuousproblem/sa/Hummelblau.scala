@@ -1,4 +1,4 @@
-package com.github.optimizationwithmetaheuristics.continuousproblem.sa.HummelblauFunction
+package com.github.optimizationwithmetaheuristics.continuousproblem.sa
 
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
@@ -28,7 +28,7 @@ import scala.math.pow
  *    theta   Move operator
  */
 
-object HummelblauFunction extends App {
+object Hummelblau extends App {
 
   implicit val logger = LoggerFactory.getLogger(getClass.getName)
   implicit val config = ConfigFactory.load().getConfig("problems.continuousproblem.sa.himmelblau")

@@ -1,6 +1,6 @@
-package com.github.optimizationwithmetaheuristics.continuousproblem.ga.HummelblauFunction
+package com.github.optimizationwithmetaheuristics.utils.ga
 
-import com.github.optimizationwithmetaheuristics.config.{Configuration, Settings}
+import com.github.optimizationwithmetaheuristics.utils.config.{Configuration, Settings}
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
 

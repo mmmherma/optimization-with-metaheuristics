@@ -1,4 +1,4 @@
-package com.github.optimizationwithmetaheuristics.continuousproblem.ga.HummelblauFunction
+package com.github.optimizationwithmetaheuristics.utils.ga
 
 import org.slf4j.LoggerFactory
 
