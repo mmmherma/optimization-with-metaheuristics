@@ -31,13 +31,13 @@ object QAP extends App {
   var bestOfEachPopulation: ArrayBuffer[Chromosome] = new ArrayBuffer[Chromosome]()
 
   for (i <- 0 to config.getInt("N") -1) {
-//    logger.info("Geration " + i.toString)
+    logger.info("Geration " + i.toString)
 
     var newPopulation: ArrayBuffer[Chromosome] = new ArrayBuffer[Chromosome]()
     var family: Int = 0
 
     for (j <- 0 to (config.getInt("N")/2)-1) {
-//      logger.info("\tFamily " + family.toString)
+      logger.info("\tFamily " + family.toString)
 
       // Get parents
       val parents: Seq[Chromosome] = population.findParents
