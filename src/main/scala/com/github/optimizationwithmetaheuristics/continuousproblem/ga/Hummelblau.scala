@@ -1,7 +1,8 @@
 package com.github.optimizationwithmetaheuristics.continuousproblem.ga
 
 import com.github.optimizationwithmetaheuristics.utils.config.{Configuration, Settings}
-import com.github.optimizationwithmetaheuristics.utils.ga.{Chromosome, Operators, Population}
+import com.github.optimizationwithmetaheuristics.utils.ga.binary.{Chromosome, Operators, Population}
+import com.github.optimizationwithmetaheuristics.utils.ga.binary.{Operators, Population}
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
 

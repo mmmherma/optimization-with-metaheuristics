@@ -1,9 +1,10 @@
-package com.github.optimizationwithmetaheuristics.utils.ga
+package com.github.optimizationwithmetaheuristics.utils.ga.integervector
 
 import com.github.optimizationwithmetaheuristics.utils.config.{Configuration, Settings}
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
 
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 class Population(size: Int, individualSize: Int) {
@@ -34,7 +35,11 @@ class Population(size: Int, individualSize: Int) {
 
   def printPopulation: Unit =
     for (individual <- population) {
-      println(individual.getGenotype)
+      individual.getGenotype.foreach({
+        print(" ")
+        print(_)
+      })
+      println()
     }
 
   def getIndividual(position: Int): Chromosome =
@@ -61,16 +66,14 @@ class Population(size: Int, individualSize: Int) {
   }
 
   def generateIndividual: Chromosome = {
-    var individual = ""
-    for(i <- 0 to individualSize-1) {
-      if(scala.util.Random.nextDouble() > 0.5) {
-        individual += "0"
-      } else {
-        individual += "1"
-      }
+    var order = new ArrayBuffer[Int](8)
+    while(order.size < 8) {
+      order = scala.util.Random.shuffle(
+        ArrayBuffer.fill(50)(scala.util.Random.nextInt(individualSize)).distinct
+      ).take(individualSize)
     }
 
-    new Chromosome(individual)
+    new Chromosome(order.toArray)
   }
 
   // POPULATION PARENT SELECTION

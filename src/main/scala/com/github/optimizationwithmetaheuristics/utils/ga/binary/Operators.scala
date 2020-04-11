@@ -1,4 +1,4 @@
-package com.github.optimizationwithmetaheuristics.utils.ga
+package com.github.optimizationwithmetaheuristics.utils.ga.binary
 
 import org.slf4j.LoggerFactory
 

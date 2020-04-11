@@ -1,4 +1,4 @@
-package com.github.optimizationwithmetaheuristics.utils.ga
+package com.github.optimizationwithmetaheuristics.utils.ga.binary
 
 import com.github.optimizationwithmetaheuristics.utils.config.{Configuration, Settings}
 import com.typesafe.config.ConfigFactory
