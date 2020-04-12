@@ -29,16 +29,6 @@ object QAP extends App {
   // Create the tabu list
   protected var tabuList: TabuList = new TabuList(10)
 
-  /*// Compute objective value of each neighbor
-  for (item <- orderedSolutions) {
-    logger.info("ITEM")
-    logger.info(item.toString)
-    logger.info(item.getObjectiveValue().toString)
-  }
-  logger.info(orderedSolutions.size.toString)*/
-
-
-
   // Set current solution
   var currentSolution = new Chromosome(Array(3, 0, 2, 1, 6, 4, 5, 7))
   var potentialSolutions = new ArrayBuffer[Chromosome]()
@@ -84,11 +74,11 @@ object QAP extends App {
     (item1, item2) => item1.getObjectiveValue() < item2.getObjectiveValue()
   )
 
-  for (solution <- potentialSolutions) {
+  /*for (solution <- potentialSolutions) {
     logger.info("Solution")
     logger.info(solution.toString)
     logger.info(solution.getObjectiveValue().toString)
-  }
+  }*/
 
   logger.info("BEST SOLUTION")
   logger.info(potentialSolutions(0).toString)
